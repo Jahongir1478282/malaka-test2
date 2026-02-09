@@ -27,10 +27,10 @@ function startTest(category) {
     currentCategory = category;
     const allTests = allQuestions[`category${category}`];
     
-    // 20 ta random test tanlash (yoki borini olish)
+    // Barcha savollarni aralashtirish
     const shuffledQuestions = shuffle([...allTests]);
     // Savollarning javob variantlarini ham aralashtiramiz
-    currentTests = shuffledQuestions.slice(0, 20).map(q => {
+    currentTests = shuffledQuestions.map(q => {
         return {
             question: q.question,
             options: shuffle([...q.options]), // Variantlarni aralashtirish
@@ -71,71 +71,9 @@ function renderTestNavigation() {
         navContainer.appendChild(navItem);
     }
 
-    // Toggle tugmasini qo'shish (agar umumiy savollar 20 tadan ko'p bo'lsa)
-    const allCategoryQuestions = allQuestions[`category${currentCategory}`];
-    
-    if (allCategoryQuestions.length > 20) {
-        const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'test-nav-item';
-        toggleBtn.style.width = 'auto';
-        toggleBtn.style.padding = '0 15px';
-        toggleBtn.style.borderRadius = '20px';
-        toggleBtn.style.fontSize = '12px';
-        
-        // Agar hozir 20 talik rejimda bo'lsak
-        if (currentTests.length <= 20) {
-            toggleBtn.textContent = 'Barchasi...';
-            toggleBtn.title = "Barcha savollarni ishlash";
-            toggleBtn.onclick = () => toggleTestMode('all');
-            toggleBtn.style.background = '#ffffff';
-            toggleBtn.style.color = '#007bff';
-        } else {
-            // Agar hozir barchasi rejimida bo'lsak
-            toggleBtn.textContent = '20 ta...';
-            toggleBtn.title = "20 ta tasodifiy testga qaytish";
-            toggleBtn.onclick = () => toggleTestMode('20');
-            toggleBtn.style.background = '#007bff';
-            toggleBtn.style.color = '#ffffff';
-        }
-        navContainer.appendChild(toggleBtn);
-    }
 }
 
-function toggleTestMode(mode) {
-    if (!confirm("Hozirgi natijalaringiz o'chiriladi va test qayta boshlanadi. Davom etasizmi?")) {
-        return;
-    }
 
-    const allTests = allQuestions[`category${currentCategory}`];
-    const shuffledQuestions = shuffle([...allTests]);
-    
-    if (mode === 'all') {
-        // Barchasini olish
-        currentTests = shuffledQuestions.map(q => {
-            return {
-                question: q.question,
-                options: shuffle([...q.options]), 
-                correct: q.correct
-            };
-        });
-    } else {
-        // Faqat 20 tasini olish
-        currentTests = shuffledQuestions.slice(0, 20).map(q => {
-            return {
-                question: q.question,
-                options: shuffle([...q.options]), 
-                correct: q.correct
-            };
-        });
-    }
-    
-    currentQuestion = 0;
-    answers = new Array(currentTests.length).fill(null);
-    
-    renderTestNavigation();
-    renderQuestion();
-    document.getElementById('questionsContainer').scrollTo(0, 0);
-}
 
 function renderQuestion() {
     const container = document.getElementById('questionsContainer');
@@ -202,7 +140,7 @@ function selectAnswer(index, answer) {
         } else {
             showResults();
         }
-    }, 2000);
+    }, 1000);
 }
 
 function showAnswer() {
@@ -309,3 +247,134 @@ function updateMenuCounts() {
 
 // Sahifa yuklanganda ishga tushirish
 updateMenuCounts();
+
+// ========== QIDIRUV MODAL ==========
+const categoryNames = {
+    'category0': '📱 AKT zamonaviy yutuqlari',
+    'category1': '💻 AKT dolzarb muammolari',
+    'category2': '🚀 Taraqqiyot strategiyasi',
+    'category3': "📊 Ta'lim sifati",
+    'category4': '👨‍🏫 Pedagogik kompetensiyalar',
+    'category5': '🌐 Raqamli kompetensiyalar',
+    'category6': '⚖️ Huquqiy asoslar',
+    'category7': '🔬 Ilmiy-innovatsion faoliyat'
+};
+
+function openSearchModal() {
+    const modal = document.getElementById('searchModal');
+    modal.classList.add('show');
+    document.getElementById('modalSearchInput').value = '';
+    document.getElementById('modalSearchInput').focus();
+    // Filter tugmalarini yaratish (faqat bir marta)
+    const filterBar = document.getElementById('modalFilterBar');
+    if (filterBar.children.length <= 1) {
+        for (const [catKey, catName] of Object.entries(categoryNames)) {
+            if (window.allQuestions[catKey] && window.allQuestions[catKey].length > 0) {
+                const btn = document.createElement('button');
+                btn.className = 'modal-filter-btn';
+                btn.dataset.filter = catKey;
+                btn.textContent = catName;
+                filterBar.appendChild(btn);
+            }
+        }
+    }
+    modalDoSearch();
+}
+
+function closeSearchModal() {
+    document.getElementById('searchModal').classList.remove('show');
+}
+
+let modalActiveFilter = 'all';
+let modalDebounce;
+
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal-filter-btn')) {
+        document.querySelectorAll('.modal-filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        modalActiveFilter = e.target.dataset.filter;
+        modalDoSearch();
+    }
+});
+
+document.addEventListener('input', (e) => {
+    if (e.target.id === 'modalSearchInput') {
+        clearTimeout(modalDebounce);
+        modalDebounce = setTimeout(modalDoSearch, 200);
+    }
+});
+
+// ESC tugmasi bilan yopish
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSearchModal();
+});
+
+function modalDoSearch() {
+    const query = document.getElementById('modalSearchInput').value.trim().toLowerCase();
+    
+    let allItems = [];
+    for (const [catKey, questions] of Object.entries(window.allQuestions)) {
+        questions.forEach(q => {
+            allItems.push({
+                category: catKey,
+                categoryName: categoryNames[catKey] || catKey,
+                question: q.question,
+                options: q.options,
+                correct: q.correct
+            });
+        });
+    }
+    
+    let filtered = allItems;
+    if (modalActiveFilter !== 'all') {
+        filtered = filtered.filter(item => item.category === modalActiveFilter);
+    }
+    if (query.length > 0) {
+        filtered = filtered.filter(item => {
+            return item.question.toLowerCase().includes(query) ||
+                   item.correct.toLowerCase().includes(query) ||
+                   item.options.some(o => o.toLowerCase().includes(query));
+        });
+    }
+    
+    const resultsDiv = document.getElementById('modalResults');
+    const infoDiv = document.getElementById('modalResultsInfo');
+    
+    if (filtered.length === 0) {
+        infoDiv.textContent = '0 ta natija';
+        resultsDiv.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">🔍 Hech narsa topilmadi</div>';
+        return;
+    }
+    
+    infoDiv.textContent = `${filtered.length} ta natija`;
+    
+    resultsDiv.innerHTML = filtered.map(item => {
+        const qText = query ? modalHighlight(item.question, query) : modalEscHtml(item.question);
+        const aText = query ? modalHighlight(item.correct, query) : modalEscHtml(item.correct);
+        return `
+        <div class="modal-result-card">
+            <div class="modal-result-q">${qText}</div>
+            <div class="modal-result-opts">
+                <ul>
+                    ${item.options.map(opt => {
+                        const oText = query ? modalHighlight(opt, query) : modalEscHtml(opt);
+                        return `<li class="${opt === item.correct ? 'modal-correct' : ''}">${opt === item.correct ? '✅ ' : ''}${oText}</li>`;
+                    }).join('')}
+                </ul>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function modalEscHtml(text) {
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+}
+
+function modalHighlight(text, query) {
+    const escaped = modalEscHtml(text);
+    const escapedQ = modalEscHtml(query);
+    const regex = new RegExp(`(${escapedQ.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return escaped.replace(regex, '<mark>$1</mark>');
+}

@@ -12,10 +12,10 @@
 <div class="container">
     
     <div class="menu" id="menu">
-        <a href="javoblar.html" class="menu-item" style="background: #007bff; color: #fff; border-color: #007bff; text-decoration: none;">
-            <h3>📚 Javoblar Qidiruv</h3>
+        <div class="menu-item" onclick="openSearchModal()" style="background: #007bff; color: #fff; border-color: #007bff;">
+            <h3>🔍 Javob Qidirish</h3>
             <p>Savollarga javob topish</p>
-        </a>
+        </div>
         <div class="menu-item" data-category="0">
             <h3>📱 AKT zamonaviy yutuqlari</h3>
             <p>90 ta savol</p>
@@ -51,7 +51,10 @@
     </div>
     
     <div id="testContainer">
-        <button class="back-btn" onclick="backToMenu()">← Menuga qaytish</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-shrink:0;">
+            <button class="back-btn" style="margin-bottom:0;" onclick="backToMenu()">← Menuga qaytish</button>
+            <button class="search-float-btn" onclick="openSearchModal()">🔍 Javob qidirish</button>
+        </div>
         
         <div class="test-nav" id="testNav"></div>
         
@@ -64,6 +67,21 @@
         </div>
     </div>
     
+    <!-- QIDIRUV MODAL -->
+    <div class="search-modal-overlay" id="searchModal">
+        <div class="search-modal">
+            <div class="search-modal-header">
+                <h2>🔍 Javob Qidirish</h2>
+                <button class="search-modal-close" onclick="closeSearchModal()">✕</button>
+            </div>
+            <div class="search-modal-search">
+                <input type="text" id="modalSearchInput" placeholder="Kalit so'z kiriting...">
+            </div>
+            <div class="search-modal-info" id="modalResultsInfo"></div>
+            <div class="search-modal-results" id="modalResults"></div>
+        </div>
+    </div>
+
     <div class="result-container" id="resultContainer">
         <h2>🎉 Test yakunlandi!</h2>
         <div class="result-stats" id="resultStats"></div>

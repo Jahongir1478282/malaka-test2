@@ -244,9 +244,6 @@ body {
         <input type="text" id="searchInput" placeholder="Savolni yozing yoki kalit so'z kiriting..." autofocus>
     </div>
 
-    <div class="filter-bar" id="filterBar">
-        <button class="filter-btn active" data-filter="all">Barchasi</button>
-    </div>
 
     <div class="results-info" id="resultsInfo"></div>
 
@@ -291,29 +288,6 @@ for (const [catKey, questions] of Object.entries(window.allQuestions)) {
     });
 }
 
-// Filter tugmalarini yaratish
-const filterBar = document.getElementById('filterBar');
-for (const [catKey, catName] of Object.entries(categoryNames)) {
-    if (window.allQuestions[catKey] && window.allQuestions[catKey].length > 0) {
-        const btn = document.createElement('button');
-        btn.className = 'filter-btn';
-        btn.dataset.filter = catKey;
-        btn.textContent = catName;
-        filterBar.appendChild(btn);
-    }
-}
-
-let activeFilter = 'all';
-
-// Filter tugmasi bosilganda
-filterBar.addEventListener('click', (e) => {
-    if (e.target.classList.contains('filter-btn')) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        activeFilter = e.target.dataset.filter;
-        doSearch();
-    }
-});
 
 const searchInput = document.getElementById('searchInput');
 const resultsList = document.getElementById('resultsList');
@@ -374,22 +348,12 @@ function renderResults(items, query) {
     }
 
     if (items.length === 0 && !query && activeFilter === 'all') {
-        resultsList.innerHTML = `
-            <div class="no-results">
-                <span class="emoji">📝</span>
-                Savolni qidirish uchun yuqoriga kalit so'z kiriting yoki kategoriyani tanlang.
-            </div>
-        `;
-        resultsInfo.textContent = `Jami ${allItems.length} ta savol mavjud`;
-        return;
+        items = allItems;
     }
 
     resultsInfo.textContent = `${items.length} ta natija topildi`;
-
-    // Ko'p natija bo'lsa, faqat birinchi 50 tasini ko'rsatamiz
-    const displayItems = items.slice(0, 50);
     
-    resultsList.innerHTML = displayItems.map(item => `
+    resultsList.innerHTML = items.map(item => `
         <div class="result-card">
             <span class="result-category">${item.categoryName}</span>
             <div class="result-question">${highlightText(item.question, query)}</div>
@@ -408,13 +372,7 @@ function renderResults(items, query) {
         </div>
     `).join('');
 
-    if (items.length > 50) {
-        resultsList.innerHTML += `
-            <div class="no-results" style="padding: 20px;">
-                <em>...va yana ${items.length - 50} ta natija. Aniqroq qidiring.</em>
-            </div>
-        `;
-    }
+
 }
 
 // Sahifa yuklanganda
