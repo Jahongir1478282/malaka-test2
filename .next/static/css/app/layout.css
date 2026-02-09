@@ -643,9 +643,6 @@ video {
 .mt-6 {
   margin-top: 1.5rem;
 }
-.mt-auto {
-  margin-top: auto;
-}
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;
@@ -1192,10 +1189,6 @@ video {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
 }
-.py-3\.5 {
-  padding-top: 0.875rem;
-  padding-bottom: 0.875rem;
-}
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -1206,9 +1199,6 @@ video {
 }
 .pb-5 {
   padding-bottom: 1.25rem;
-}
-.pl-11 {
-  padding-left: 2.75rem;
 }
 .pl-12 {
   padding-left: 3rem;
@@ -1322,10 +1312,6 @@ video {
 .text-emerald-800 {
   --tw-text-opacity: 1;
   color: rgb(6 95 70 / var(--tw-text-opacity));
-}
-.text-rose-500 {
-  --tw-text-opacity: 1;
-  color: rgb(244 63 94 / var(--tw-text-opacity));
 }
 .text-rose-700 {
   --tw-text-opacity: 1;
@@ -1940,10 +1926,6 @@ a {
   --tw-border-opacity: 1;
   border-color: rgb(59 130 246 / var(--tw-border-opacity));
 }
-.focus\:border-rose-500:focus {
-  --tw-border-opacity: 1;
-  border-color: rgb(244 63 94 / var(--tw-border-opacity));
-}
 .focus\:bg-white:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -1956,10 +1938,6 @@ a {
 .focus\:ring-blue-100:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(219 234 254 / var(--tw-ring-opacity));
-}
-.focus\:ring-rose-100:focus {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(255 228 230 / var(--tw-ring-opacity));
 }
 .focus-visible\:outline-none:focus-visible {
   outline: 2px solid transparent;

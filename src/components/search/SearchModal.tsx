@@ -7,7 +7,7 @@
 "use client";
 
 import { useEffect, useRef, useMemo, useState } from "react";
-import { Modal, Input, Badge, Card, Button } from "../ui";
+import { Modal, Badge } from "../ui";
 import { TextHighlight } from "../common";
 import { categories } from "../../data/categoryMeta";
 import type {
