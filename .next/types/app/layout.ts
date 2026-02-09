@@ -1,4 +1,4 @@
-// File: /home/jahon/Desktop/Malaka Yan/src/app/layout.tsx
+// File: D:\TUIT\2025-2026\Malaka\App\malaka-test2\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
