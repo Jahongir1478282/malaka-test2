@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Javoblar Qidiruv Sahifasi</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 22px;
+    color: #333;
+}
+
+.back-link {
+    display: inline-block;
+    background: #dc3545;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.back-link:hover {
+    background: #c82333;
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 14px 20px 14px 45px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-box input:focus {
+    border-color: #007bff;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #999;
+}
+
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #007bff;
+    background: #fff;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: #007bff;
+    color: #fff;
+}
+
+.results-info {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+    padding: 8px 0;
+}
+
+.results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.result-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    transition: box-shadow 0.2s;
+}
+
+.result-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.result-category {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: #e9ecef;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.result-question {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.result-question mark {
+    background: #fff3cd;
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
+.result-answer {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 6px;
+    color: #155724;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.result-answer .check {
+    flex-shrink: 0;
+    font-size: 16px;
+}
+
+.result-options {
+    margin-top: 10px;
+}
+
+.result-options summary {
+    cursor: pointer;
+    font-size: 13px;
+    color: #007bff;
+    user-select: none;
+}
+
+.result-options ul {
+    list-style: none;
+    padding: 8px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.result-options li {
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    background: #fafafa;
+    color: #555;
+}
+
+.result-options li.correct-opt {
+    background: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+    font-weight: 600;
+}
+
+.no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 16px;
+}
+
+.no-results .emoji {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #bbb; }
+
+@media (max-width: 768px) {
+    .header h1 { font-size: 18px; }
+    .search-box input { font-size: 14px; padding: 12px 16px 12px 40px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <a href="index.html" class="back-link">← Bosh menyu</a>
+        <h1>📚 Savollarga Javob Topish</h1>
+    </div>
+
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Savolni yozing yoki kalit so'z kiriting..." autofocus>
+    </div>
+
+    <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">Barchasi</button>
+    </div>
+
+    <div class="results-info" id="resultsInfo"></div>
+
+    <div class="results-list" id="resultsList"></div>
+</div>
+
+<script>
+    window.allQuestions = {};
+</script>
+<script src="js/category1.js"></script>
+<script src="js/category2.js"></script>
+<script src="js/category3.js"></script>
+<script src="js/category4.js"></script>
+<script src="js/category5.js"></script>
+<script src="js/category6.js"></script>
+<script src="js/category7.js"></script>
+<script src="js/category8.js"></script>
+
+<script>
+const categoryNames = {
+    'category0': '📱 AKT zamonaviy yutuqlari',
+    'category1': '💻 AKT dolzarb muammolari',
+    'category2': '🚀 Taraqqiyot strategiyasi',
+    'category3': '📊 Ta\'lim sifati',
+    'category4': '👨‍🏫 Pedagogik kompetensiyalar',
+    'category5': '🌐 Raqamli kompetensiyalar',
+    'category6': '⚖️ Huquqiy asoslar',
+    'category7': '🔬 Ilmiy-innovatsion faoliyat'
+};
+
+// Barcha savollarni yig'ish
+let allItems = [];
+for (const [catKey, questions] of Object.entries(window.allQuestions)) {
+    questions.forEach((q, idx) => {
+        allItems.push({
+            category: catKey,
+            categoryName: categoryNames[catKey] || catKey,
+            question: q.question,
+            options: q.options,
+            correct: q.correct
+        });
+    });
+}
+
+// Filter tugmalarini yaratish
+const filterBar = document.getElementById('filterBar');
+for (const [catKey, catName] of Object.entries(categoryNames)) {
+    if (window.allQuestions[catKey] && window.allQuestions[catKey].length > 0) {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.dataset.filter = catKey;
+        btn.textContent = catName;
+        filterBar.appendChild(btn);
+    }
+}
+
+let activeFilter = 'all';
+
+// Filter tugmasi bosilganda
+filterBar.addEventListener('click', (e) => {
+    if (e.target.classList.contains('filter-btn')) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        activeFilter = e.target.dataset.filter;
+        doSearch();
+    }
+});
+
+const searchInput = document.getElementById('searchInput');
+const resultsList = document.getElementById('resultsList');
+const resultsInfo = document.getElementById('resultsInfo');
+
+let debounceTimer;
+searchInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(doSearch, 250);
+});
+
+function doSearch() {
+    const query = searchInput.value.trim().toLowerCase();
+    
+    let filtered = allItems;
+    
+    // Kategoriya filter
+    if (activeFilter !== 'all') {
+        filtered = filtered.filter(item => item.category === activeFilter);
+    }
+    
+    // Qidiruv filter
+    if (query.length > 0) {
+        filtered = filtered.filter(item => {
+            return item.question.toLowerCase().includes(query) ||
+                   item.correct.toLowerCase().includes(query) ||
+                   item.options.some(o => o.toLowerCase().includes(query));
+        });
+    }
+
+    renderResults(filtered, query);
+}
+
+function highlightText(text, query) {
+    if (!query) return escapeHtml(text);
+    const escaped = escapeHtml(text);
+    const escapedQuery = escapeHtml(query);
+    const regex = new RegExp(`(${escapedQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return escaped.replace(regex, '<mark>$1</mark>');
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function renderResults(items, query) {
+    if (items.length === 0 && (query || activeFilter !== 'all')) {
+        resultsList.innerHTML = `
+            <div class="no-results">
+                <span class="emoji">🔍</span>
+                Hech narsa topilmadi. Boshqa kalit so'z bilan urinib ko'ring.
+            </div>
+        `;
+        resultsInfo.textContent = '0 ta natija topildi';
+        return;
+    }
+
+    if (items.length === 0 && !query && activeFilter === 'all') {
+        resultsList.innerHTML = `
+            <div class="no-results">
+                <span class="emoji">📝</span>
+                Savolni qidirish uchun yuqoriga kalit so'z kiriting yoki kategoriyani tanlang.
+            </div>
+        `;
+        resultsInfo.textContent = `Jami ${allItems.length} ta savol mavjud`;
+        return;
+    }
+
+    resultsInfo.textContent = `${items.length} ta natija topildi`;
+
+    // Ko'p natija bo'lsa, faqat birinchi 50 tasini ko'rsatamiz
+    const displayItems = items.slice(0, 50);
+    
+    resultsList.innerHTML = displayItems.map(item => `
+        <div class="result-card">
+            <span class="result-category">${item.categoryName}</span>
+            <div class="result-question">${highlightText(item.question, query)}</div>
+            <div class="result-answer">
+                <span class="check">✅</span>
+                <span>${highlightText(item.correct, query)}</span>
+            </div>
+            <div class="result-options">
+                <div>Barcha variantlar</div>
+                <ul>
+                    ${item.options.map(opt => `
+                        <li class="${opt === item.correct ? 'correct-opt' : ''}">${opt === item.correct ? '✅ ' : ''}${highlightText(opt, query)}</li>
+                    `).join('')}
+                </ul>
+            </div>
+        </div>
+    `).join('');
+
+    if (items.length > 50) {
+        resultsList.innerHTML += `
+            <div class="no-results" style="padding: 20px;">
+                <em>...va yana ${items.length - 50} ta natija. Aniqroq qidiring.</em>
+            </div>
+        `;
+    }
+}
+
+// Sahifa yuklanganda
+doSearch();
+</script>
+
+</body>
+</html>

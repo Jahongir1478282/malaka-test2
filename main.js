@@ -275,7 +275,7 @@ function showResults() {
     else if (percentage < 50) emoji = '😔';
     
     document.getElementById('resultStats').innerHTML = `
-        <p>To'g'ri javoblar: <strong>${correctAnswers} / 20</strong></p>
+        <p>To'g'ri javoblar: <strong>${correctAnswers} / ${currentTests.length}</strong></p>
         <p>Foiz: <strong>${percentage.toFixed(1)}%</strong></p>
         <p style="font-size: 48px; margin-top: 20px;">${emoji}</p>
     `;
